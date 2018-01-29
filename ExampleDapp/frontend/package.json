@@ -1,0 +1,21 @@
+{
+  "name": "SimpleWishlist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "interact.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bignumber.js": "1.1.0",
+    "truffle-contract": "3.0.1",
+    "http-server": "0.10.0",
+    "web3": "0.20.2"
+  }
+}

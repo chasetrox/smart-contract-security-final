@@ -1,0 +1,223 @@
+<!doctype>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script type="text/javascript" src="/node_modules/web3/dist/web3.min.js"></script>
+    <script type="text/javascript" src="/node_modules/bignumber.js/bignumber.min.js"></script>
+    <script type="text/javascript" src="node_modules/truffle-contract/dist/truffle-contract.min.js"></script>
+    <script type="text/javascript">
+
+    // Change here to redirect to a different contract
+    // currently set to Ropsten deployment of BookWishlist
+    var contractAddress = "0x0c63df1945293a4c3950202536d61aeae52edf3a"
+    //Reads a text file. Used to read the contract specification JSON file
+    function readTextFile(file, callback) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.overrideMimeType("application/json");
+        rawFile.open("GET", file, true);
+        rawFile.onreadystatechange = function() {
+            if (rawFile.readyState === 4 && rawFile.status == "200") {
+                callback(rawFile.responseText);
+            }
+        }
+        rawFile.send(null);
+    }
+
+    function createContributeBtn(book) {
+        var contributeBtn = document.createElement("button")
+        contributeBtn.innerText = "Contribute!"
+        contributeBtn.addEventListener("click",
+        function() {
+          let contribution = document.getElementById("contribution_amt").value
+
+          console.log("Contributing "+ contribution+"to "+book.id+" from addr: " + web3.eth.accounts[0])
+          if (contribution.trim().length == 0 || contribution == null || contribution == 0) {
+            alert("Please add a contribution below.")
+            return
+          }
+          contractobject.at(contractAddress).then(function(instance) {
+              instance.contribute(book.id, { from: web3.eth.accounts[0], gas:1000000, value: contribution }).then(function(result) {
+                  console.log("Successfully contributed to: "+book.bookInfo[0]);
+                  //window.location.reload(false);
+              }).catch(function(e) {
+                 alert("Contribution failed!")
+                 console.log("Failed with error: "+e)
+             })
+          });
+        });
+        return contributeBtn;
+    }
+
+    function createrescindBtn(book) {
+        var rescindBtn = document.createElement("button")
+        rescindBtn.innerText = "Rescind!"
+        rescindBtn.addEventListener("click",
+        function() {
+          console.log("rescinding donation from "+ book.id+" with addr " + web3.eth.accounts[0])
+          contractobject.at(contractAddress).then(function(instance) {
+              // calls the function (w/out state change) for return val
+              instance.rescind.call(book.id, {from: web3.eth.accounts[0], gas:1000000})
+              .then(function(res) {
+                console.log("rescinding from: " + book.bookInfo.name + " w/ " + res)
+                // formally calls function for blockchain state change
+                instance.rescind(book.id, {from: web3.eth.accounts[0], gas:1000000});
+              }).catch(function(e) {
+                alert("Unable to rescind from " + book.bookInfo[0])
+                return
+              });
+          });
+        });
+        return rescindBtn;
+    }
+
+    function createCheckBtn(book) {
+      var checkBtn = document.createElement("button")
+      checkBtn.innerText = "Your Contribution"
+      checkBtn.addEventListener("click",
+      function() {
+        contractobject.at(contractAddress).then(function(instance) {
+          instance.getContribution.call(book.id, {from: web3.eth.accounts[0]})
+          .then(function(res) {
+            alert("Total contribution from " + web3.eth.accounts[0] + " is " + res)
+            // formally calls function for blockchain state change
+          }).catch(function(e) {
+            console.log("Error getting contribution "+e)
+          });
+        });
+      });
+      return checkBtn;
+    }
+
+    function getBookAt(i, books, numBooks) {
+      if (i >= numBooks) {
+        console.log(books)
+        createBooksTable(books)
+        return
+      }
+      contractobject.at(contractAddress).then(function(instance) {
+          instance.getListItem(i, { from: web3.eth.coinbase }).then(function(result) {
+              books.push({id: i, bookInfo: result})
+              getBookAt(++i, books, numBooks)
+              //document.getElementById(tag).innerText = text + result;
+          }).catch(function(e) {
+             console.log("get book " + i +" failed w/ "+e)
+             return []
+         })
+      });
+    }
+
+    //Get all books in contract
+    function initializeTable() {
+        var table = document.getElementById('book_title')
+        contractobject.at(contractAddress).then(function(instance) {
+            instance.numBooks().then(function(result) {
+                console.log("num books: "+result.c[0]);
+                let numBooks = result.c[0]
+                getBookAt(0, [], numBooks)
+            }).catch(function(e) {
+               console.log("get num failed" + e)
+           })
+        });
+    }
+
+    function createBooksTable(books) {
+      let table = document.getElementById('table_body')
+      if (books == undefined || books.length == 0) {
+        console.log("no books!")
+        return
+      }
+
+      books.forEach(function (book, i) {
+        console.log("book i "+i+" is "+book)
+        let row = document.createElement("tr")
+        book.bookInfo.forEach(function (el, j) {
+          if (j != 3) { // ignore extra element
+            row.append(createCol(el, j))
+          }
+        })
+
+        row.append(createContributeBtn(book))
+        row.append(createrescindBtn(book))
+        row.append(createCheckBtn(book))
+        table.append(row)
+      })
+    }
+
+    function createCol(el, index) {
+      let d = document.createElement("td")
+      if (index == 0 || index == 3 || index == 5) {
+        // addresses and strings
+        d.innerText = el
+      } else if (index == 1 || index == 2 || index == 4) {
+          // integers come in triplets
+        d.innerText = el
+      } else {
+        console.log("Unknown index "+ index + " el " + el)
+      }
+      return d
+    }
+
+    //Get current credit on default account
+    function getCurrentCredit(web3) {
+        account0=web3.eth.accounts[0]
+        currentCredit=web3.eth.getBalance(account0)
+        document.getElementById('current_credit').innerText = 'Current credit on ' +account0 + ' is ' +currentCredit+ " wei.";
+    }
+
+    // Sets metamask as web3 provider
+    if (typeof web3 !== 'undefined') {
+      // Use Mist/MetaMask's provider
+      window.web3 = new Web3(web3.currentProvider);
+      console.log("using metamask or mist")
+    } else {
+      console.log('No web3? You should consider trying MetaMask!')
+        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+      window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+    }
+    //Create a new Web3 object to interact with the blockchain
+    //var web3 = new Web3()
+    //Set endpoint at localhost:7545 (Ganache)
+    //var provider = new Web3.providers.HttpProvider("http://localhost:7545")
+    //web3.setProvider(provider)
+    var contract_spec
+    var contractobject
+
+    //This load the contract specifications (from the Truffle compiled
+    // contract in /build/contracts/BookWishlist.json)
+    readTextFile("/build/contracts/BookWishlist.json", function(text) {
+        contract_spec = JSON.parse(text)
+        contractobject = TruffleContract(contract_spec)
+        contractobject.setProvider(web3.currentProvider)
+        //getCurrentCredit(web3)
+        var bookId;
+        console.log(web3.eth.accounts)
+
+        initializeTable()
+    });
+    </script>
+</head>
+
+<body>
+    <h1> Wishlist Application</h1>
+    <div id="current_credit"></div>
+
+    <div>
+        <table class="table-bordered">
+          <thead>
+            <tr><td>Title</td><td>value</td><td>Total Contribution</td>
+          </thead>
+          <tbody id="table_body">
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <p>Set an amount to Contribute:</p>
+        <input type="number" id="contribution_amt">
+    </div>
+
+    <div id="current_status"></div>
+</body>
+
+</html>
